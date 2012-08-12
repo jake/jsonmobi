@@ -78,16 +78,20 @@ end
 
 post '/:key' do
   halt 400 if @output_mode != 'web'
+  
+  REDIS.set(params[:key], params[:json])
+  
+  redirect to('/' + params[:key])
 end
 
 get '/:key?' do
-  obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
-  
-  halt 404 if ! obj
+  @obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
   
   if @output_mode == 'web' then
-    '<h1>' + obj + '</h1>'
+    @obj ||= '{}'
+    erb :edit
   else
-    @output_mode == 'jsonp' ? pad(obj) : obj
+    halt 404 if ! @obj
+    @output_mode == 'jsonp' ? pad(@obj) : @obj
   end
 end
