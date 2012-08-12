@@ -6,7 +6,9 @@ configure do
   REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 end
 
-def error_resp(code)
+error 400..505 do
+  code = response.status
+  
   message = {
     500 => 'Error',
     403 => 'Forbidden',
@@ -18,22 +20,25 @@ def error_resp(code)
       'code' => code.to_s,
       'message' => message[code]
     }
-  }.to_json
+  }
   
-  @pad ? pad(obj) : obj
-end
-
-error 400..505 do
-  error_resp(response.status)
+  if @output_mode == 'web' then
+    '<h1>Error</h1>' + obj['error']['message']
+  else
+    obj = obj.to_json
+    @output_mode == 'jsonp' ? pad(obj) : obj
+  end
 end
 
 before do
-  @pad = false
   if ['x.jsonp.dev', 'x.jsonp.mobi'].include? request.host then
     content_type :js
-    @pad = true
-  else
+    @output_mode = 'jsonp'
+  elsif ['x.json.dev', 'x.json.mobi'].include? request.host then
     content_type :json
+    @output_mode = 'json'
+  else
+    @output_mode = 'web'
   end
 end
 
@@ -50,5 +55,9 @@ get '/:key?' do
   
   if ! obj then halt 404 end
   
-  @pad ? pad(obj) : obj
+  if @output_mode == 'web' then
+    '<h1>' + obj + '</h1>'
+  else
+    @output_mode == 'jsonp' ? pad(obj) : obj
+  end
 end
