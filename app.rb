@@ -3,6 +3,12 @@ require 'erb'
 #require 'sinatra/basic_auth'
 #require 'json'
 
+configure do
+  require 'redis'
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+end
+
 before do
   @pad = false
   if ['json.dev', 'json.mobi'].include? request.host then
