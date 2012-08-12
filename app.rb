@@ -50,10 +50,14 @@ def grab(name)
   REDIS.get(name)
 end
 
+post '/:key' do
+  halt 400 if @output_mode != 'web'
+end
+
 get '/:key?' do
   obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
   
-  if ! obj then halt 404 end
+  halt 404 if ! obj
   
   if @output_mode == 'web' then
     '<h1>' + obj + '</h1>'
