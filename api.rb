@@ -1,5 +1,4 @@
 require 'sinatra'
-require 'erb'
 
 configure do
   require 'redis'
@@ -30,13 +29,11 @@ end
 
 before do
   @pad = false
-  if ['x.json.dev', 'x.json.mobi'].include? request.host then
-    content_type :json
-  elsif ['x.jsonp.dev', 'x.jsonp.mobi'].include? request.host then
+  if ['x.jsonp.dev', 'x.jsonp.mobi'].include? request.host then
     content_type :js
     @pad = true
   else
-    erb :edit_index, :layout => :edit
+    content_type :json
   end
 end
 
