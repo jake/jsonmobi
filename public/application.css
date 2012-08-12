@@ -1,0 +1,8 @@
+body {
+    padding-top: 20px;
+}
+
+.json_box {
+    font: 15px monaco, 'courier new', courier, monospace;
+    height: 300px;
+}
