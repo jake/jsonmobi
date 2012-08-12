@@ -11,12 +11,12 @@ end
 
 before do
   @pad = false
-  if ['json.dev', 'json.mobi'].include? request.host then
+  if ['x.json.dev', 'x.json.mobi'].include? request.host then
     content_type 'application/json'
-  elsif ['jsonp.dev', 'jsonp.mobi'].include? request.host then
+  elsif ['x.jsonp.dev', 'x.jsonp.mobi'].include? request.host then
     content_type 'application/javascript'
     @pad = true
-  elsif ['edit.json.dev', 'edit.jsonp.dev', 'edit.json.mobi', 'edit.json.mobi'].include? request.host then
+  else
     erb :edit_index, :layout => :edit
   end
 end
