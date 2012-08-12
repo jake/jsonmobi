@@ -9,6 +9,27 @@ configure do
   REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 end
 
+def error_resp(code)
+  message = {
+    500 => 'Error',
+    403 => 'Forbidden',
+    404 => 'Not found'
+  }
+  
+  obj = {
+    'error' => {
+      'code' => code.to_s,
+      'message' => message[code]
+    }
+  }.to_json
+  
+  @pad ? pad(obj) : obj
+end
+
+error 400..505 do
+  error_resp(response.status)
+end
+
 before do
   @pad = false
   if ['x.json.dev', 'x.json.mobi'].include? request.host then
@@ -21,23 +42,6 @@ before do
   end
 end
 
-def error_resp(code = 404)
-  response.status = code
-  
-  codes = {
-    404 => {
-      'message' => 'Not found'
-    }
-  }
-  
-  {
-    'error' => {
-      'code' => code.to_s,
-      'message' => codes[code]['message']
-    }
-  }.to_json
-end
-
 def pad(json)
   'json_mobi(' + json + ')'
 end
@@ -48,6 +52,8 @@ end
 
 get '/:key?' do
   obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
-  obj = obj ? obj : error_resp(404)
+  
+  if ! obj then halt(404) end
+  
   @pad ? pad(obj) : obj
 end
