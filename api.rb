@@ -48,7 +48,7 @@ end
 get '/:key?' do
   obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
   
-  if ! obj then halt(404) end
+  if ! obj then halt 404 end
   
   @pad ? pad(obj) : obj
 end
