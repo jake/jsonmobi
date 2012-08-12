@@ -22,7 +22,8 @@ before do
 end
 
 def pad(obj)
-  (params[:callback] ? params[:callback] : "json_mobi") + "(" + obj + ");"
+  # (params[:callback] ? params[:callback] : "json_mobi") + "(" + obj + ");"
+  'json_mobi(' + obj + ')'
 end
 
 get '/:key' do
