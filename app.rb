@@ -12,9 +12,9 @@ end
 before do
   @pad = false
   if ['x.json.dev', 'x.json.mobi'].include? request.host then
-    content_type 'application/json'
+    content_type :json
   elsif ['x.jsonp.dev', 'x.jsonp.mobi'].include? request.host then
-    content_type 'application/javascript'
+    content_type :js
     @pad = true
   else
     erb :edit_index, :layout => :edit
@@ -22,25 +22,32 @@ before do
 end
 
 def error_resp(code = 404)
-  '{"error":{"code":' + code.to_s + '}}'
+  response.status = code
+  
+  codes = {
+    404 => {
+      'message' => 'Not found'
+    }
+  }
+  
+  {
+    'error' => {
+      'code' => code.to_s,
+      'message' => codes[code]['message']
+    }
+  }.to_json
 end
 
-def pad(obj)
-  # (params[:callback] ? params[:callback] : "json_mobi") + "(" + obj + ");"
-  'json_mobi(' + obj.to_s + ')'
+def pad(json)
+  'json_mobi(' + json + ')'
 end
 
 def grab(name)
   REDIS.get(name)
 end
 
-get '/:key' do
-  obj = grab(params[:key])
+get '/:key?' do
+  obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
   obj = obj ? obj : error_resp(404)
-  @pad ? pad(obj) : obj
-end
-
-get '/' do
-  obj = '{"json":"yup"}'
   @pad ? pad(obj) : obj
 end
