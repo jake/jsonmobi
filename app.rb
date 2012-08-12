@@ -1,7 +1,5 @@
 require 'sinatra'
 require 'erb'
-#require 'sinatra/basic_auth'
-#require 'json'
 
 configure do
   require 'redis'
