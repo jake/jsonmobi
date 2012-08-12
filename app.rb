@@ -21,17 +21,26 @@ before do
   end
 end
 
+def error_resp(code = 404)
+  '{"error":{"code":' + code.to_s + '}}'
+end
+
 def pad(obj)
   # (params[:callback] ? params[:callback] : "json_mobi") + "(" + obj + ");"
-  'json_mobi(' + obj + ')'
+  'json_mobi(' + obj.to_s + ')'
+end
+
+def grab(name)
+  REDIS.get(name)
 end
 
 get '/:key' do
-  if @pad then pad(params[:key])
-  else params[:key] end
+  obj = grab(params[:key])
+  obj = obj ? obj : error_resp(404)
+  @pad ? pad(obj) : obj
 end
 
 get '/' do
-  if @pad then pad("{json:'yup'}")
-  else "{json:'yup'}" end
+  obj = '{"json":"yup"}'
+  @pad ? pad(obj) : obj
 end
