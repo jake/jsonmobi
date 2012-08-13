@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'rufus/mnemo'
 
 configure do
   require 'redis'
@@ -85,13 +86,21 @@ post '/:key' do
 end
 
 get '/:key?' do
-  @obj = params[:key] ? grab(params[:key]) : {'json' => 'yup'}.to_json
+  @obj = grab(params[:key]) if params[:key]
   
   if @output_mode == 'web' then
+    redirect to('/' + Rufus::Mnemo::to_s(rand 8**5)) if ! params[:key]
+    
+    @fresh_obj = ! @obj
     @obj ||= '{}'
     erb :edit
   else
-    halt 404 if ! @obj
+    if ! params[:key] then
+      @obj = {'json' => 'yup'}.to_json
+    elsif ! @obj then
+      halt 404
+    end
+    
     @output_mode == 'jsonp' ? pad(@obj) : @obj
   end
 end
