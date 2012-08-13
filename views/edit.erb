@@ -2,12 +2,12 @@
     <div class="span12">
         <form method="post">
             <div class="controls control-group" id="json_wrapper">
-                <textarea name="json" class="span12 json_box"><%= @obj %></textarea><br />
+                <textarea name="json" id="json" class="span12 json_box"><%= @obj %></textarea><br />
             </div>
             
             <div class="form-actions">
                 <input type="submit" value="<%= @fresh_obj ? 'Create' : 'Save' %>" class="btn btn-large btn-primary" />
-                <!-- <input type="button" value="Validate" class="btn btn-large" style="margin-left:10px;"/> -->
+                <input type="button" onclick="Mobi.validate_json();" value="Validate" class="btn btn-large" style="margin-left:10px;"/>
 
                 <span class="api_urls">
                     <input type="text" onclick="this.select();" value="http://x.json.mobi/<%= params[:key] %>">
