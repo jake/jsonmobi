@@ -7,6 +7,16 @@ editor.setDisplayIndentGuides(false);
 editor.setHighlightActiveLine(false);
 editor.setHighlightSelectedWord(false);
 
+// Disable gotoline
+editor.commands.addCommands([{
+    name: "gotoline",
+    bindKey: {win: "Ctrl-L", mac: "Command-L"},
+    exec: function(editor, line) {
+        return false;
+    },
+    readOnly: true
+}]);
+
 $('#json').val(editor.getSession().getValue());
 editor.getSession().on('change', function(){
     $('#json').val(editor.getSession().getValue());
