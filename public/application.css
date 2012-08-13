@@ -2,9 +2,16 @@ body {
     padding-top: 20px;
 }
 
-.json_box {
-    font: 16px monaco, menlo, 'andale mono', 'courier new', sans-serif;
-    height: 400px;
+#editor_wrapper {
+    position: relative;
+    background: #141414;
+    border: 1px solid #252525;
+    padding: 12px 8px;
+}
+
+#editor {
+    position: relative;
+    height: 500px;
 }
 
 .api_urls {
