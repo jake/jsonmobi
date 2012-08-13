@@ -3,6 +3,17 @@ body {
 }
 
 .json_box {
-    font: 15px monaco, 'courier new', courier, monospace;
-    height: 300px;
+    font: 16px monaco, menlo, 'andale mono', 'courier new', sans-serif;
+    height: 400px;
+}
+
+.api_urls {
+    display: inline-block;
+    position: relative;
+    top: 5px;
+}
+
+.api_urls input {
+    cursor: pointer;
+    margin-left: 10px;
 }

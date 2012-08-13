@@ -1,13 +1,18 @@
 <div class="row">
     <div class="span12">
         <form method="post">
-            <span class="control-group" id="json_wrapper">
+            <div class="controls control-group" id="json_wrapper">
                 <textarea name="json" class="span12 json_box"><%= @obj %></textarea><br />
-            </span>
+            </div>
             
             <div class="form-actions">
                 <input type="submit" value="<%= @fresh_obj ? 'Create' : 'Save' %>" class="btn btn-large btn-primary" />
-                <!-- <input type="button" value="Validate" class="btn btn-large" style="margin-left:10px;"/> -->
+                <input type="button" value="Validate" class="btn btn-large" style="margin-left:10px;"/>
+
+                <span class="api_urls">
+                    <input type="text" onclick="this.select();" value="http://x.json.mobi/<%= params[:key] %>">
+                    <input type="text" onclick="this.select();" value="http://x.jsonp.mobi/<%= params[:key] %>">
+                </div>
             </div>
         </form>
     </div>
